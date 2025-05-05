@@ -1,0 +1,2 @@
+# babyCrocodileBot
+一款对接NapCat机器人的nodejs插件端
