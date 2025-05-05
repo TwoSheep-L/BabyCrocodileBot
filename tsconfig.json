@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // 基础路径
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }, // 关键配置：将 @/ 映射到 src/
+    /* 基础配置 */
+    "target": "ES2022", // 编译目标 ES 版本
+    "module": "NodeNext", // 使用 Node.js 的模块解析
+    "moduleResolution": "NodeNext", // 与 Node.js 的模块解析策略兼容
+    "outDir": "./dist", // 输出目录
+    "rootDir": "./src", // 源代码目录
+    /* 类型检查配置 */
+    "strict": true, // 启用所有严格类型检查
+    "skipLibCheck": true, // 跳过库类型检查（提升编译速度）
+    "noEmitOnError": false, // 关键：即使有错误也继续编译
+    /* 功能特性 */
+    "esModuleInterop": true, // 兼容 CommonJS/ES 模块
+    "resolveJsonModule": true, // 允许导入 JSON 文件
+    "allowSyntheticDefaultImports": true, // 允许默认导入无默认导出的模块
+    /* 类型定义 */
+    "types": [
+      "node",
+      "ws"
+    ], // 包含 Node.js 和 WebSocket 类型
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    /* 源码映射 */
+    "sourceMap": true, // 生成 sourcemap 文件
+    "inlineSources": true // 将源码嵌入 sourcemap
+  },
+  "include": [
+    "src/**/*.ts"
+  ], // 包含的文件范围
+  "exclude": [
+    "node_modules",
+    "test"
+  ] // 排除目录
+}

@@ -1,0 +1,3279 @@
+[
+    [
+        "/send_group_msg",
+        {
+            "post": {
+                "summary": "send_group_msg",
+                "deprecated": false,
+                "description": "发送群消息",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "message": {
+                                        "type": "array",
+                                        "items": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/%E8%89%BE%E7%89%B9%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/%E8%A1%A8%E6%83%85%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/%E5%9B%BE%E7%89%87%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/%E5%9B%9E%E5%A4%8D%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/JSON%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/%E8%AF%AD%E9%9F%B3%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/%E8%A7%86%E9%A2%91%E6%B6%88%E6%81%AF"
+                                                },
+                                                {
+                                                    "$ref": "#/components/schemas/markdown%E6%B6%88%E6%81%AF"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "message"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message_id": {
+                                                    "type": "number",
+                                                    "title": "消息ID",
+                                                    "description": "消息ID"
+                                                }
+                                            },
+                                            "required": [
+                                                "message_id"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                },
+                                "example": {
+                                    "status": "ok",
+                                    "retcode": 0,
+                                    "data": {
+                                        "message_id": 696124706
+                                    },
+                                    "message": "",
+                                    "wording": ""
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/delete_msg",
+        {
+            "post": {
+                "summary": "撤回消息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message_id": {
+                                        "$ref": "#/components/schemas/message_id"
+                                    }
+                                },
+                                "required": [
+                                    "message_id"
+                                ]
+                            },
+                            "example": {
+                                "message": 1768656698
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_remark",
+        {
+            "post": {
+                "summary": "设置群备注",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "type": "string"
+                                    },
+                                    "remark": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "remark"
+                                ]
+                            },
+                            "example": {
+                                "group_id": 819085771,
+                                "remark": "呀呼！！！"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_kick",
+        {
+            "post": {
+                "summary": "群踢人",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "reject_add_request": {
+                                        "type": "boolean",
+                                        "description": "是否群拉黑"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "user_id",
+                                    "reject_add_request"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_group_system_msg",
+        {
+            "post": {
+                "summary": "获取群系统消息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {}
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "InvitedRequest": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"
+                                                    }
+                                                },
+                                                "join_requests": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "InvitedRequest",
+                                                "join_requests"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_ban",
+        {
+            "post": {
+                "summary": "群禁言",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "duration": {
+                                        "type": "number"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "user_id",
+                                    "duration"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_essence_msg_list",
+        {
+            "post": {
+                "summary": "获取群精华消息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    }
+                                },
+                                "required": [
+                                    "group_id"
+                                ]
+                            },
+                            "example": {
+                                "group_id": 1012451981
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "msg_seq": {
+                                                        "type": "number"
+                                                    },
+                                                    "msg_random": {
+                                                        "type": "number"
+                                                    },
+                                                    "sender_id": {
+                                                        "type": "number",
+                                                        "description": "发送人账号"
+                                                    },
+                                                    "sender_nick": {
+                                                        "type": "string",
+                                                        "description": "发送人昵称"
+                                                    },
+                                                    "operator_id": {
+                                                        "type": "number",
+                                                        "description": "设精人账号"
+                                                    },
+                                                    "operator_nick": {
+                                                        "type": "string",
+                                                        "description": "设精人昵称"
+                                                    },
+                                                    "message_id": {
+                                                        "type": "number"
+                                                    },
+                                                    "operator_time": {
+                                                        "type": "number",
+                                                        "description": "设精时间"
+                                                    },
+                                                    "content": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "$ref": "#/components/schemas/%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF"
+                                                                },
+                                                                {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "const": "image"
+                                                                        },
+                                                                        "data": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "url": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "required": [
+                                                                                "url"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type",
+                                                                        "data"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "消息内容"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "msg_seq",
+                                                    "message_id",
+                                                    "operator_nick",
+                                                    "operator_id",
+                                                    "sender_nick",
+                                                    "sender_id",
+                                                    "msg_random",
+                                                    "content",
+                                                    "operator_time"
+                                                ]
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_whole_ban",
+        {
+            "post": {
+                "summary": "全体禁言",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "enable": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "enable"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_portrait",
+        {
+            "post": {
+                "summary": "设置群头像",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "file": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "file"
+                                ]
+                            },
+                            "example": "{\r\n    \"group_id\": 123456,\r\n    //网络路径\r\n    \"file\": \"http://i0.hdslb.com/bfs/archive/c8fd97a40bf79f03e7b76cbc87236f612caef7b2.png\"\r\n    // 本地路径\r\n    //\"file\": \"file://D:/a.jpg\"\r\n                \r\n}"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "result": {
+                                                    "type": "string"
+                                                },
+                                                "errMsg": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "result",
+                                                "errMsg"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                },
+                                "example": {
+                                    "status": "ok",
+                                    "retcode": 0,
+                                    "data": {
+                                        "result": 0,
+                                        "errMsg": "success"
+                                    },
+                                    "message": "",
+                                    "wording": "",
+                                    "echo": null
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_admin",
+        {
+            "post": {
+                "summary": "设置群管理",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "enable": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "user_id",
+                                    "enable"
+                                ]
+                            },
+                            "example": {
+                                "group_id": 123456,
+                                "user_id": 123456,
+                                "enable": false
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_card",
+        {
+            "post": {
+                "summary": "设置群成员名片",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "card": {
+                                        "type": "string",
+                                        "description": "为空则为取消群名片"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "user_id"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_essence_msg",
+        {
+            "post": {
+                "summary": "设置群精华消息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message_id": {
+                                        "$ref": "#/components/schemas/message_id"
+                                    }
+                                },
+                                "required": [
+                                    "message_id"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "errCode": {
+                                                    "type": "string"
+                                                },
+                                                "errMsg": {
+                                                    "type": "string"
+                                                },
+                                                "result": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "wording": {
+                                                            "type": "string",
+                                                            "description": "正常为空，异常有文本提示"
+                                                        },
+                                                        "digestUin": {
+                                                            "type": "string"
+                                                        },
+                                                        "digestTime": {
+                                                            "type": "number"
+                                                        },
+                                                        "msg": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                        },
+                                                        "errorCode": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "wording",
+                                                        "errorCode",
+                                                        "msg",
+                                                        "digestTime",
+                                                        "digestUin"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "errCode",
+                                                "result",
+                                                "errMsg"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                },
+                                "example": {
+                                    "status": "ok",
+                                    "retcode": 0,
+                                    "data": {
+                                        "errCode": 0,
+                                        "errMsg": "success",
+                                        "result": {
+                                            "wording": "",
+                                            "digestUin": "0",
+                                            "digestTime": 0,
+                                            "msg": {
+                                                "groupCode": "0",
+                                                "msgSeq": 0,
+                                                "msgRandom": 0,
+                                                "msgContent": [],
+                                                "textSize": "0",
+                                                "picSize": "0",
+                                                "videoSize": "0",
+                                                "senderUin": "0",
+                                                "senderTime": 0,
+                                                "addDigestUin": "0",
+                                                "addDigestTime": 0,
+                                                "startTime": 0,
+                                                "latestMsgSeq": 0,
+                                                "opType": 0
+                                            },
+                                            "errorCode": 0
+                                        }
+                                    },
+                                    "message": "",
+                                    "wording": "",
+                                    "echo": null
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_name",
+        {
+            "post": {
+                "summary": "设置群名",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "group_name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "group_name"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/delete_essence_msg",
+        {
+            "post": {
+                "summary": "删除群精华消息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message_id": {
+                                        "$ref": "#/components/schemas/message_id"
+                                    }
+                                },
+                                "required": [
+                                    "message_id"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "errCode": {
+                                                    "type": "string"
+                                                },
+                                                "errMsg": {
+                                                    "type": "string"
+                                                },
+                                                "result": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "wording": {
+                                                            "type": "string",
+                                                            "description": "正常为空，异常有文本提示"
+                                                        },
+                                                        "digestUin": {
+                                                            "type": "string"
+                                                        },
+                                                        "digestTime": {
+                                                            "type": "string"
+                                                        },
+                                                        "msg": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "wording",
+                                                        "digestTime",
+                                                        "digestUin",
+                                                        "msg"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "errCode",
+                                                "result",
+                                                "errMsg"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                },
+                                "example": {
+                                    "status": "ok",
+                                    "retcode": 0,
+                                    "data": {
+                                        "errCode": 0,
+                                        "errMsg": "success",
+                                        "result": {
+                                            "wording": "",
+                                            "digestUin": "0",
+                                            "digestTime": 0,
+                                            "msg": {
+                                                "groupCode": "0",
+                                                "msgSeq": 0,
+                                                "msgRandom": 0,
+                                                "msgContent": [],
+                                                "textSize": "0",
+                                                "picSize": "0",
+                                                "videoSize": "0",
+                                                "senderUin": "0",
+                                                "senderTime": 0,
+                                                "addDigestUin": "0",
+                                                "addDigestTime": 0,
+                                                "startTime": 0,
+                                                "latestMsgSeq": 0,
+                                                "opType": 0
+                                            },
+                                            "errorCode": 0
+                                        }
+                                    },
+                                    "message": "",
+                                    "wording": "",
+                                    "echo": null
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_leave",
+        {
+            "post": {
+                "summary": "退群",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "is_dismiss": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": [
+                                    "group_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_group_add_request",
+        {
+            "post": {
+                "summary": "处理加群请求",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "flag": {
+                                        "type": "string",
+                                        "description": "请求id"
+                                    },
+                                    "approve": {
+                                        "type": "boolean",
+                                        "description": "是否同意"
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "description": "拒绝理由"
+                                    }
+                                },
+                                "required": [
+                                    "flag",
+                                    "approve"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_group_list",
+        {
+            "post": {
+                "summary": "获取群列表",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "no_cache": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "不缓存"
+                                    }
+                                },
+                                "required": [
+                                    "no_cache"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/%E7%BE%A4%E4%BF%A1%E6%81%AF"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_group_member_info",
+        {
+            "post": {
+                "summary": "获取群成员信息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "no_cache": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": [
+                                    "group_id",
+                                    "user_id",
+                                    "no_cache"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/%E7%BE%A4%E6%88%90%E5%91%98%E4%BF%A1%E6%81%AF"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_group_member_list",
+        {
+            "post": {
+                "summary": "获取群成员列表",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    },
+                                    "no_cache": {
+                                        "type": "boolean",
+                                        "default": false
+                                    }
+                                },
+                                "required": [
+                                    "group_id"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/%E7%BE%A4%E6%88%90%E5%91%98%E4%BF%A1%E6%81%AF"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_group_shut_list",
+        {
+            "post": {
+                "summary": "获取群禁言列表",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    }
+                                },
+                                "required": [
+                                    "group_id"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "uid": {
+                                                        "type": "string"
+                                                    },
+                                                    "qid": {
+                                                        "type": "string"
+                                                    },
+                                                    "uin": {
+                                                        "type": "string"
+                                                    },
+                                                    "nick": {
+                                                        "type": "string"
+                                                    },
+                                                    "remark": {
+                                                        "type": "string"
+                                                    },
+                                                    "cardType": {
+                                                        "type": "number"
+                                                    },
+                                                    "cardName": {
+                                                        "type": "string"
+                                                    },
+                                                    "role": {
+                                                        "type": "number"
+                                                    },
+                                                    "avatarPath": {
+                                                        "type": "string"
+                                                    },
+                                                    "shutUpTime": {
+                                                        "type": "number",
+                                                        "description": "解禁时间"
+                                                    },
+                                                    "isDelete": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "isSpecialConcerned": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "isSpecialShield": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "isRobot": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "groupHonor": {
+                                                        "type": "object",
+                                                        "properties": {}
+                                                    },
+                                                    "memberRealLevel": {
+                                                        "type": "number",
+                                                        "description": "群聊等级"
+                                                    },
+                                                    "memberLevel": {
+                                                        "type": "number"
+                                                    },
+                                                    "globalGroupLevel": {
+                                                        "type": "number"
+                                                    },
+                                                    "globalGroupPoint": {
+                                                        "type": "number"
+                                                    },
+                                                    "memberTitleId": {
+                                                        "type": "number"
+                                                    },
+                                                    "memberSpecialTitle": {
+                                                        "type": "string"
+                                                    },
+                                                    "specialTitleExpireTime": {
+                                                        "type": "string"
+                                                    },
+                                                    "userShowFlag": {
+                                                        "type": "number"
+                                                    },
+                                                    "userShowFlagNew": {
+                                                        "type": "number"
+                                                    },
+                                                    "richFlag": {
+                                                        "type": "number"
+                                                    },
+                                                    "mssVipType": {
+                                                        "type": "number"
+                                                    },
+                                                    "bigClubLevel": {
+                                                        "type": "number"
+                                                    },
+                                                    "bigClubFlag": {
+                                                        "type": "number"
+                                                    },
+                                                    "autoRemark": {
+                                                        "type": "string"
+                                                    },
+                                                    "creditLevel": {
+                                                        "type": "number"
+                                                    },
+                                                    "joinTime": {
+                                                        "type": "number",
+                                                        "description": "入群时间"
+                                                    },
+                                                    "lastSpeakTime": {
+                                                        "type": "number",
+                                                        "description": "最后发言时间"
+                                                    },
+                                                    "memberFlag": {
+                                                        "type": "number"
+                                                    },
+                                                    "memberFlagExt": {
+                                                        "type": "number"
+                                                    },
+                                                    "memberMobileFlag": {
+                                                        "type": "number"
+                                                    },
+                                                    "memberFlagExt2": {
+                                                        "type": "number"
+                                                    },
+                                                    "isSpecialShielded": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "cardNameId": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "uid",
+                                                    "globalGroupLevel",
+                                                    "cardName",
+                                                    "cardType",
+                                                    "remark",
+                                                    "nick",
+                                                    "uin",
+                                                    "qid",
+                                                    "isRobot",
+                                                    "isSpecialShield",
+                                                    "isSpecialConcerned",
+                                                    "isDelete",
+                                                    "shutUpTime",
+                                                    "role",
+                                                    "avatarPath",
+                                                    "memberLevel",
+                                                    "memberRealLevel",
+                                                    "groupHonor",
+                                                    "memberFlagExt",
+                                                    "memberFlag",
+                                                    "lastSpeakTime",
+                                                    "memberSpecialTitle",
+                                                    "memberTitleId",
+                                                    "globalGroupPoint",
+                                                    "joinTime",
+                                                    "userShowFlagNew",
+                                                    "userShowFlag",
+                                                    "specialTitleExpireTime",
+                                                    "bigClubFlag",
+                                                    "bigClubLevel",
+                                                    "mssVipType",
+                                                    "richFlag",
+                                                    "autoRemark",
+                                                    "creditLevel",
+                                                    "cardNameId",
+                                                    "isSpecialShielded",
+                                                    "memberMobileFlag",
+                                                    "memberFlagExt2"
+                                                ]
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/ocr_image",
+        {
+            "post": {
+                "summary": "OCR 图片识别",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "image": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "image"
+                                ]
+                            },
+                            "example": "{\r\n    \"image\": \"https://i0.hdslb.com/bfs/archive/c8fd97a40bf79f03e7b76cbc87236f612caef7b2.png\"\r\n    // 本地路径\r\n    //\"image\": \"file://D:/a.jpg\"\r\n}"
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "text": {
+                                                        "type": "string",
+                                                        "description": "该行文本总和"
+                                                    },
+                                                    "pt1": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "x": {
+                                                                "type": "string"
+                                                            },
+                                                            "y": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "description": "顶点坐标",
+                                                        "required": [
+                                                            "x",
+                                                            "y"
+                                                        ]
+                                                    },
+                                                    "pt2": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "x": {
+                                                                "type": "string"
+                                                            },
+                                                            "y": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "description": "顶点坐标",
+                                                        "required": [
+                                                            "x",
+                                                            "y"
+                                                        ]
+                                                    },
+                                                    "pt3": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "x": {
+                                                                "type": "string"
+                                                            },
+                                                            "y": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "description": "顶点坐标",
+                                                        "required": [
+                                                            "x",
+                                                            "y"
+                                                        ]
+                                                    },
+                                                    "pt4": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "x": {
+                                                                "type": "string"
+                                                            },
+                                                            "y": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "description": "顶点坐标",
+                                                        "required": [
+                                                            "x",
+                                                            "y"
+                                                        ]
+                                                    },
+                                                    "charBox": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "charText": {
+                                                                    "type": "string"
+                                                                },
+                                                                "charBox": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "pt1": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "x": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "y": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "description": "顶点坐标",
+                                                                            "required": [
+                                                                                "x",
+                                                                                "y"
+                                                                            ]
+                                                                        },
+                                                                        "pt2": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "x": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "y": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "description": "顶点坐标",
+                                                                            "required": [
+                                                                                "x",
+                                                                                "y"
+                                                                            ]
+                                                                        },
+                                                                        "pt3": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "x": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "y": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "description": "顶点坐标",
+                                                                            "required": [
+                                                                                "x",
+                                                                                "y"
+                                                                            ]
+                                                                        },
+                                                                        "pt4": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "x": {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                "y": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            },
+                                                                            "description": "顶点坐标",
+                                                                            "required": [
+                                                                                "x",
+                                                                                "y"
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "pt1",
+                                                                        "pt4",
+                                                                        "pt3",
+                                                                        "pt2"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "charText",
+                                                                "charBox"
+                                                            ]
+                                                        },
+                                                        "description": "拆分"
+                                                    },
+                                                    "score": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "text",
+                                                    "pt4",
+                                                    "pt3",
+                                                    "pt2",
+                                                    "pt1",
+                                                    "charBox",
+                                                    "score"
+                                                ],
+                                                "description": "一个代表一行"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                },
+                                "example": {
+                                    "status": "ok",
+                                    "retcode": 0,
+                                    "data": [
+                                        {
+                                            "text": "nU",
+                                            "pt1": {
+                                                "x": "25.930853",
+                                                "y": "1.711797"
+                                            },
+                                            "pt2": {
+                                                "x": "72.461205",
+                                                "y": "2.745806"
+                                            },
+                                            "pt3": {
+                                                "x": "72.193184",
+                                                "y": "14.806514"
+                                            },
+                                            "pt4": {
+                                                "x": "25.662836",
+                                                "y": "13.772506"
+                                            },
+                                            "charBox": [
+                                                {
+                                                    "charText": "nU",
+                                                    "charBox": {
+                                                        "pt1": {
+                                                            "x": "41.186707",
+                                                            "y": "2.050816"
+                                                        },
+                                                        "pt2": {
+                                                            "x": "56.442558",
+                                                            "y": "2.389835"
+                                                        },
+                                                        "pt3": {
+                                                            "x": "56.182915",
+                                                            "y": "14.073647"
+                                                        },
+                                                        "pt4": {
+                                                            "x": "40.927063",
+                                                            "y": "13.734628"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "score": ""
+                                        },
+                                        {
+                                            "text": "yion in",
+                                            "pt1": {
+                                                "x": "40.310081",
+                                                "y": "19.155090"
+                                            },
+                                            "pt2": {
+                                                "x": "92.413017",
+                                                "y": "17.004047"
+                                            },
+                                            "pt3": {
+                                                "x": "93.224297",
+                                                "y": "36.654957"
+                                            },
+                                            "pt4": {
+                                                "x": "41.121365",
+                                                "y": "38.806000"
+                                            },
+                                            "charBox": [
+                                                {
+                                                    "charText": "yion",
+                                                    "charBox": {
+                                                        "pt1": {
+                                                            "x": "40.310081",
+                                                            "y": "19.155090"
+                                                        },
+                                                        "pt2": {
+                                                            "x": "66.660988",
+                                                            "y": "18.067207"
+                                                        },
+                                                        "pt3": {
+                                                            "x": "67.446922",
+                                                            "y": "37.104027"
+                                                        },
+                                                        "pt4": {
+                                                            "x": "41.096012",
+                                                            "y": "38.191910"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "charText": " ",
+                                                    "charBox": {
+                                                        "pt1": {
+                                                            "x": "66.660988",
+                                                            "y": "18.067207"
+                                                        },
+                                                        "pt2": {
+                                                            "x": "73.847603",
+                                                            "y": "17.770512"
+                                                        },
+                                                        "pt3": {
+                                                            "x": "74.633530",
+                                                            "y": "36.807331"
+                                                        },
+                                                        "pt4": {
+                                                            "x": "67.446922",
+                                                            "y": "37.104027"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "charText": "in",
+                                                    "charBox": {
+                                                        "pt1": {
+                                                            "x": "73.847603",
+                                                            "y": "17.770512"
+                                                        },
+                                                        "pt2": {
+                                                            "x": "85.825287",
+                                                            "y": "17.276018"
+                                                        },
+                                                        "pt3": {
+                                                            "x": "86.611214",
+                                                            "y": "36.312836"
+                                                        },
+                                                        "pt4": {
+                                                            "x": "74.633530",
+                                                            "y": "36.807331"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "score": ""
+                                        },
+                                        {
+                                            "text": "mlHttp.",
+                                            "pt1": {
+                                                "x": "6.956338",
+                                                "y": "61.610126"
+                                            },
+                                            "pt2": {
+                                                "x": "72.331848",
+                                                "y": "65.844292"
+                                            },
+                                            "pt3": {
+                                                "x": "71.104248",
+                                                "y": "84.798470"
+                                            },
+                                            "pt4": {
+                                                "x": "5.728738",
+                                                "y": "80.564301"
+                                            },
+                                            "charBox": [
+                                                {
+                                                    "charText": "mlHttp",
+                                                    "charBox": {
+                                                        "pt1": {
+                                                            "x": "9.230268",
+                                                            "y": "61.757401"
+                                                        },
+                                                        "pt2": {
+                                                            "x": "61.530674",
+                                                            "y": "65.144737"
+                                                        },
+                                                        "pt3": {
+                                                            "x": "60.341438",
+                                                            "y": "83.506592"
+                                                        },
+                                                        "pt4": {
+                                                            "x": "8.041031",
+                                                            "y": "80.119255"
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "charText": ".",
+                                                    "charBox": {
+                                                        "pt1": {
+                                                            "x": "63.804607",
+                                                            "y": "65.292007"
+                                                        },
+                                                        "pt2": {
+                                                            "x": "70.626396",
+                                                            "y": "65.733833"
+                                                        },
+                                                        "pt3": {
+                                                            "x": "69.437164",
+                                                            "y": "84.095695"
+                                                        },
+                                                        "pt4": {
+                                                            "x": "62.615368",
+                                                            "y": "83.653870"
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "score": ""
+                                        }
+                                    ],
+                                    "message": "",
+                                    "wording": "",
+                                    "echo": null
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/translate_en2zh",
+        {
+            "post": {
+                "summary": "英译中",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "words": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "英文数组"
+                                    }
+                                },
+                                "required": [
+                                    "words"
+                                ]
+                            },
+                            "example": {
+                                "words": [
+                                    "word",
+                                    "message",
+                                    "group"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                },
+                                "example": {
+                                    "status": "ok",
+                                    "retcode": 0,
+                                    "data": [
+                                        "单词",
+                                        "讯息",
+                                        "群组"
+                                    ],
+                                    "message": "",
+                                    "wording": "",
+                                    "echo": null
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_qq_profile",
+        {
+            "post": {
+                "summary": "设置账号信息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nickname": {
+                                        "type": "string",
+                                        "description": "昵称"
+                                    },
+                                    "personal_note": {
+                                        "type": "string",
+                                        "description": "个性签名"
+                                    },
+                                    "sex": {
+                                        "type": "string",
+                                        "description": "性别"
+                                    }
+                                },
+                                "required": [
+                                    "nickname"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "result": {
+                                                    "type": "number"
+                                                },
+                                                "errMsg": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "result",
+                                                "errMsg"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_doubt_friends_add_request",
+        {
+            "post": {
+                "summary": "处理被过滤好友请求",
+                "deprecated": false,
+                "description": " 在 4.7.43 版本中 \napprove 的值无效\n调用该接口既是同意好友请求！！！\n调用该接口既是同意好友请求！！！\n调用该接口既是同意好友请求！！！",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "flag": {
+                                        "type": "string"
+                                    },
+                                    "approve": {
+                                        "type": "boolean",
+                                        "description": "4.7.43 版本中该值无效",
+                                        "default": true
+                                    }
+                                },
+                                "required": [
+                                    "flag",
+                                    "approve"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {}
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/send_poke",
+        {
+            "post": {
+                "summary": "发送戳一戳",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "group_id": {
+                                        "$ref": "#/components/schemas/group_id"
+                                    }
+                                },
+                                "required": [
+                                    "user_id"
+                                ]
+                            },
+                            "example": {
+                                "user_id": 1129317309,
+                                "group_id": 790514019
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/set_friend_add_request",
+        {
+            "post": {
+                "summary": "处理好友请求",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "flag": {
+                                        "type": "string",
+                                        "description": "请求id"
+                                    },
+                                    "approve": {
+                                        "type": "boolean",
+                                        "description": "是否同意"
+                                    },
+                                    "remark": {
+                                        "type": "string",
+                                        "description": "好友备注"
+                                    }
+                                },
+                                "required": [
+                                    "flag",
+                                    "remark",
+                                    "approve"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "null"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_login_info",
+        {
+            "post": {
+                "summary": "获取登录号信息",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {}
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "user_id": {
+                                                    "type": "number"
+                                                },
+                                                "nickname": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "user_id",
+                                                "nickname"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/get_friend_list",
+        {
+            "post": {
+                "summary": "获取好友列表",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "no_cache": {
+                                        "type": "boolean",
+                                        "description": "不缓存",
+                                        "default": false
+                                    }
+                                },
+                                "required": [
+                                    "no_cache"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/%E5%A5%BD%E5%8F%8B%E4%BF%A1%E6%81%AF"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/delete_friend",
+        {
+            "post": {
+                "summary": "删除好友",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "friend_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    },
+                                    "temp_block": {
+                                        "type": "boolean",
+                                        "description": "拉黑"
+                                    },
+                                    "temp_both_del": {
+                                        "type": "boolean",
+                                        "description": "双向删除"
+                                    }
+                                },
+                                "required": [
+                                    "temp_both_del",
+                                    "temp_block"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "result": {
+                                                    "type": "number"
+                                                },
+                                                "errMsg": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "result",
+                                                "errMsg"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ],
+    [
+        "/nc_get_user_status",
+        {
+            "post": {
+                "summary": "获取用户状态",
+                "deprecated": false,
+                "description": "",
+                "tags": [],
+                "parameters": [],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "$ref": "#/components/schemas/user_id"
+                                    }
+                                },
+                                "required": [
+                                    "user_id"
+                                ]
+                            },
+                            "example": ""
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "const": "ok"
+                                        },
+                                        "retcode": {
+                                            "type": "number"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "number"
+                                                },
+                                                "ext_status": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "status",
+                                                "ext_status"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "wording": {
+                                            "type": "string"
+                                        },
+                                        "echo": {
+                                            "type": "string",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "retcode",
+                                        "data",
+                                        "message",
+                                        "wording",
+                                        "echo"
+                                    ]
+                                }
+                            }
+                        },
+                        "headers": {}
+                    }
+                },
+                "security": []
+            }
+        }
+    ]
+]
