@@ -62,19 +62,19 @@ const checkDatas = () => {
 const prompt = async (): Promise<Partial<config>> => {
     let config: Partial<config> = {};
     await new Promise((resolve) => {
-        rl.question(`请输入ip：`, (ip) => {
+        rl.question(`[服务器]请输入ip：`, (ip) => {
             config.ip = ip;
             resolve(config);
         });
     });
     await new Promise((resolve) => {
-        rl.question(`请输入端口：`, (port) => {
+        rl.question(`[服务器]请输入端口：`, (port) => {
             config.port = parseInt(port);
             resolve(config);
         });
     });
     await new Promise((resolve) => {
-        rl.question(`请输入token：`, (token) => {
+        rl.question(`[服务器]请输入token：`, (token) => {
             config.token = token;
             resolve(config);
         });
