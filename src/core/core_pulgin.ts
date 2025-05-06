@@ -1,69 +1,92 @@
-import { pluginConfig } from "@/types/core_pulgin";
+import { pluginConfig, pluginModule } from "@/types/core_pulgin";
 import { logger } from "@/utils/logger";
 import fs from "fs";
 import path from "path";
+import { pathToFileURL } from "url"; // 导入pathToFileURL
 
-export class plugin implements pluginConfig {
-    public path: string; //插件路径
-    public name: string; //插件名称
-    public version: string; //插件版本
-    public description: string; //插件描述
-    public author: string; //插件作者
-    public dependencies: string[]; //插件依赖
-    public command: string[]; //插件指令
-    public event: string[]; //插件事件
-    public weight: number; //插件权重
+export class Plugin {
+    public config: pluginConfig = {
+        path: "",
+        name: "",
+        version: "",
+        description: "",
+        author: "匿名作者",
+        dependencies: [],
+        command: [],
+        event: [],
+    };
+    public pluginModule: pluginModule = { default: () => {} };
 
     constructor(pluginPath: string) {
-        this.path = pluginPath;
-        //检查路径是否存在
-        if (!fs.existsSync(path.resolve(this.path))) {
-            fs.mkdirSync(path.resolve(this.path));
+        this.loadPlugin(pluginPath);
+    }
+
+    async loadPlugin(pluginPath: string) {
+        this.config.path = pluginPath;
+        if (!fs.existsSync(path.resolve(this.config.path))) {
+            fs.mkdirSync(path.resolve(this.config.path));
         }
-        //检查路径中是否存在index.js/ts 和config.json
-        if (
-            !fs.existsSync(path.resolve(this.path, "index.js")) &&
-            !fs.existsSync(path.resolve(this.path, "index.ts"))
-        ) {
+
+        // 确定入口文件路径（index.js 或 index.ts）
+        const jsEntry = path.resolve(this.config.path, "index.js");
+        const tsEntry = path.resolve(this.config.path, "index.ts");
+        let entryFile: string;
+
+        if (fs.existsSync(jsEntry)) {
+            entryFile = jsEntry;
+        } else if (fs.existsSync(tsEntry)) {
+            entryFile = tsEntry;
+        } else {
             throw new Error("插件目录下未找到index.js/ts文件");
         }
-        if (!fs.existsSync(path.resolve(this.path, "config.json"))) {
+
+        // 检查config.json
+        const configPath = path.resolve(this.config.path, "config.json");
+        if (!fs.existsSync(configPath)) {
             throw new Error("插件目录下未找到config.json文件");
         }
 
-        let configString = fs.readFileSync(
-            path.resolve(this.path, "config.json"),
-            "utf-8"
-        );
-        let configObj: Partial<pluginConfig> = {};
+        // 读取配置
+        let configString = fs.readFileSync(configPath, "utf-8");
+        let configObj: Partial<pluginConfig>;
         try {
             configObj = JSON.parse(configString);
         } catch (error) {
             throw new Error("插件配置文件config.json格式错误");
         }
 
-        this.name = configObj.name ?? "未命名插件";
-        this.version = configObj.version ?? "1.0.0";
-        this.description = configObj.description ?? "未描述插件";
-        this.author = configObj.author ?? "未命名作者";
-        this.dependencies = configObj.dependencies ?? [];
-        this.command = configObj.command ?? [];
-        this.event = configObj.event ?? [];
-        this.weight = configObj.weight ?? 0;
+        // 配置赋值
+        this.config = {
+            ...this.config,
+            ...configObj,
+            path: this.config.path,
+        };
+
+        // 转换为file:// URL
+        try {
+            this.pluginModule = await import(entryFile); // 使用正确的URL导入
+        } catch (error) {
+            logger.error(`[插件]${this.config.name} 的入口文件加载失败。`);
+            console.error(error);
+            return;
+        }
+
+        //检查导出
+        if (!this.pluginModule?.default) {
+            logger.error(
+                `[插件]${this.config.name} 的入口文件导出错误，未找到default导出`
+            );
+            return;
+        }
+        if (typeof this.pluginModule?.default !== "function") {
+            logger.error(
+                `[插件]${this.config.name} 的入口文件导出错误，default导出必须是函数`
+            );
+            return;
+        }
+
         logger.info(
-            `[插件]${this.name}插件加载成功 版本:${this.version} 作者:${this.author}`
+            `[插件]${this.config.name} 加载成功 版本:${this.config.version} 作者:${this.config.author}`
         );
     }
-
-    // public getConfig() {
-    //     return this.config;
-    // }
-
-    // public getPath() {
-    //     return this.path;
-    // }
-
-    // public getName() {
-    //     return this.name;
-    // }
 }

@@ -2,17 +2,21 @@ import { WebSocket } from "ws";
 import CatBot from "./core.catbot";
 import { NapCatConfig } from "@/types/core_catbot";
 import { logger } from "@/utils/logger";
-import { botMessage } from "@/types/core_client";
+import { botMessage, changeConfigParams } from "@/types/core_client";
 import core_apis from "./core_apis";
 import { api } from "@/types/core_apis";
 import { v4 } from "uuid";
 import colors from "colors";
+import fs from "fs";
+import path from "path";
+import { Plugin } from "@/core/core_pulgin";
 
 class CoreClient {
     public state: number = 0; //状态 0:未连接 1:连接中 2:已连接
     public botServer: CatBot | undefined;
     public api: api | undefined;
     public events: string[] = [];
+    public config: changeConfigParams = { serverOriginData: true };
 
     //消息监听执行函数
     public msgEvents: any = {};
@@ -72,6 +76,15 @@ class CoreClient {
             "notice.notify.title",
             "notice.notify.profile_like",
         ];
+        //加载插件
+        this.loadPlugin();
+    }
+
+    //修改配置项
+    changeConfig(config: changeConfigParams) {
+        if (config.serverOriginData) {
+            this.config.serverOriginData = config.serverOriginData;
+        }
     }
 
     //连接服务端
@@ -131,6 +144,42 @@ class CoreClient {
         }
     };
 
+    //加载插件
+    loadPlugin = async () => {
+        let dirPath = path.resolve(__dirname, "../plugins");
+        let dirs = fs.readdirSync(dirPath);
+        logger.info(`[插件]开始加载插件...`);
+        let allPuglinData = dirs.map((dir) => {
+            let pluginConfigPath = path.resolve(dirPath, dir, "./config.json");
+            logger.info(`[插件]正在加载插件-->${dir}`);
+            //检查文件是否存在
+            if (!fs.existsSync(pluginConfigPath)) {
+                logger.error(`插件${dir}缺少config.json文件`);
+                return;
+            }
+            let pluginConfigFile = fs.readFileSync(pluginConfigPath, "utf-8");
+            let pluginConfig = {};
+            try {
+                pluginConfig = JSON.parse(pluginConfigFile);
+            } catch (error) {
+                logger.error(`插件${dir}的配置文件格式错误`);
+                return;
+            }
+            //检查入口文件是否存在
+            let entryFile = path.resolve(dirPath, dir, "./index");
+            if (
+                !fs.existsSync(entryFile + ".js") &&
+                !fs.existsSync(entryFile + ".ts")
+            ) {
+                logger.error(`插件${dir}的入口文件不存在`);
+                return;
+            } else {
+                //开始加载插件
+                return new Plugin(path.resolve(dirPath, dir));
+            }
+        });
+    };
+
     //连接时触发
     onOpen = async () => {
         logger.info("成功连接到服务器。");
@@ -141,7 +190,9 @@ class CoreClient {
         let data: any = {};
         try {
             data = JSON.parse(dataBaffle.toString());
-            logger.info("[接收]服务端返回数据:" + dataBaffle.toString());
+            if (this.config.serverOriginData) {
+                logger.info("[接收]服务端返回数据:" + dataBaffle.toString());
+            }
             // console.log(data);
         } catch (error) {
             logger.error("[错误]数据解析错误:" + error);

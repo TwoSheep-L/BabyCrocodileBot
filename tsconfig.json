@@ -8,8 +8,8 @@
     }, // 关键配置：将 @/ 映射到 src/
     /* 基础配置 */
     "target": "ES2022", // 编译目标 ES 版本
-    "module": "NodeNext", // 使用 Node.js 的模块解析
-    "moduleResolution": "NodeNext", // 与 Node.js 的模块解析策略兼容
+    "module": "commonjs", // 使用 Node.js 的模块解析
+    "moduleResolution": "node", // 与 Node.js 的模块解析策略兼容
     "outDir": "./dist", // 输出目录
     "rootDir": "./src", // 源代码目录
     /* 类型检查配置 */

@@ -48,6 +48,9 @@ const main = async () => {
     logger.info("读取IP为:" + config?.ip);
 
     bot.connect(config as config);
+
+    //用户输入
+    userCommand();
 };
 
 //检查并创建datas目录
@@ -81,6 +84,47 @@ const prompt = async (): Promise<Partial<config>> => {
     });
 
     return config;
+};
+
+//用户输入命令
+const userCommand = async () => {
+    rl.question(``, async (cmd) => {
+        await handleCommand(cmd);
+        userCommand();
+    });
+};
+
+//处理用户输入的命令
+const handleCommand = async (command: string) => {
+    if (!command.startsWith("/")) return "";
+    command = command.slice(1);
+    let cmdArr: string[] = command.split(" ");
+    let arg: string[] = cmdArr.slice(1);
+    switch (cmdArr?.[0]) {
+        case "help":
+            logger.info("帮助");
+            break;
+        case "exit":
+            logger.info("退出");
+            process.exit(0);
+        case "reload":
+            bot.loadPlugin();
+        case "serverOriginData":
+            if (arg?.[0] === "true") {
+                bot.changeConfig({ serverOriginData: true });
+                logger.info("开启服务端数据源");
+                return;
+            }
+            if (arg?.[0] === "false") {
+                bot.changeConfig({ serverOriginData: false });
+                logger.info("关闭服务端数据源");
+                return;
+            }
+
+        default:
+            logger.info("未知命令");
+            break;
+    }
 };
 
 main();
