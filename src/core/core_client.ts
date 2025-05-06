@@ -5,6 +5,8 @@ import { logger } from "@/utils/logger";
 import { botMessage } from "@/types/core_client";
 import core_apis from "./core_apis";
 import { api } from "@/types/core_apis";
+import { v4 } from "uuid";
+import colors from "colors";
 
 class CoreClient {
     public state: number = 0; //状态 0:未连接 1:连接中 2:已连接
@@ -12,9 +14,8 @@ class CoreClient {
     public api: api | undefined;
     public events: string[] = [];
 
-    public msgEvents: any = {
-        "meta_event.lifecycle": [],
-    };
+    //消息监听执行函数
+    public msgEvents: any = {};
 
     constructor(public ws?: WebSocket) {
         this.ws = ws;
@@ -104,9 +105,9 @@ class CoreClient {
     submitListenFn = (event: string, data: any) => {
         if (Array.isArray(this.msgEvents?.[event])) {
             let fnList = this.msgEvents?.[event];
-            fnList.forEach((fn: Function) => {
-                if (typeof fn === "function") {
-                    fn(data);
+            fnList.forEach((fnConfig) => {
+                if (typeof fnConfig.fn === "function") {
+                    fnConfig.fn(data);
                 }
             });
         }
@@ -118,7 +119,13 @@ class CoreClient {
             if (!this.msgEvents?.[event]) {
                 this.msgEvents[event] = [];
             }
-            this.msgEvents[event].push(fn);
+            let fnConfig = {
+                event,
+                fn,
+                id: v4(),
+            };
+            this.msgEvents[event].push(fnConfig);
+            return fnConfig.id;
         } else {
             logger.error(`[错误]事件${event}不存在`);
         }
@@ -151,7 +158,7 @@ class CoreClient {
             }
             //心跳事件
             if (data?.meta_event_type === "heartbeat") {
-                logger.info(`[心跳]`);
+                logger.info(`[心跳]${"♥".red}`);
                 this.submitListenFn("meta_event.heartbeat", data);
             }
         }
