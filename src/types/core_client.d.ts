@@ -264,3 +264,8 @@ export interface MessageLightApp {
         content: string; // 小程序卡片内容（JSON字符串）
     };
 }
+
+//修改配置项入参
+export interface changeConfigParams {
+    serverOriginData?: boolean; // 是否开启服务端数据源
+}
