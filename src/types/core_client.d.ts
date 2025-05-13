@@ -35,29 +35,23 @@ export interface sender {
 }
 
 export type Message =
-    | MessageText
-    | MessageFace
-    | MessageImage
-    | MessageRecord
-    | MessageVideo
-    | MessageAt
-    | MessageRps
-    | MessageDice
-    | MessageShake
-    | MessagePoke
-    | MessageShare
-    | MessageContact
-    | MessageLocation
-    | MessageMusic
-    | MessageReply
-    | MessageForward
-    | MessageNode
-    | MessageJson
-    | MessageMface
-    | MessageFile
-    | MessageMarkdown
-    | MessageLightApp
-    | string;
+    | message_text
+    | message_face
+    | message_image
+    | message_record
+    | message_video
+    | message_at
+    | message_rps
+    | message_dice
+    | message_contact
+    | message_music
+    | message_reply
+    | message_forward
+    | message_node
+    | message_json
+    | message_mface
+    | message_file
+    | String;
 
 export interface message_text {
     type: "text";
@@ -268,4 +262,43 @@ export interface MessageLightApp {
 //修改配置项入参
 export interface changeConfigParams {
     serverOriginData?: boolean; // 是否开启服务端数据源
+}
+
+//监听函数入参
+export namespace outputData {
+    //群消息
+    export interface groupData {
+        self_id: number;
+        user_id: number;
+        time: number;
+        message_id: number;
+        user_id: number;
+        nickname: string;
+        card: string;
+        role: string;
+        raw_message: string;
+        group_id: number;
+        message: Message[];
+    }
+
+    //私聊消息
+    export interface privateData {
+        self_id: number;
+        user_id: number;
+        time: number;
+        message_id: number;
+        message_seq: number;
+        real_id: number;
+        real_seq: string;
+        message_type: string;
+        sender: sender;
+        raw_message: string;
+        font: number;
+        sub_type: string;
+        message_format: string;
+        post_type: string;
+        group_id: number;
+        raw: object;
+        message: Message[];
+    }
 }

@@ -1,3 +1,6 @@
+import CoreClient from "@/core/core_client";
+import { api } from "./core_apis";
+
 export interface pluginConfig {
     path?: string; //插件路径
     name?: string; //插件名称
@@ -17,4 +20,11 @@ export interface plugin {
 export interface pluginModule {
     [key: string, value: any];
     default: Function;
+}
+
+export interface pluginArgs {
+    [key: string, value: any];
+    api: api;
+    on: Function;
+    bot: CoreClient;
 }

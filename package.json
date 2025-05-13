@@ -5,6 +5,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+        "build": "tsc",
+        "start": "node -r tsconfig-paths/register dist/index.js",
         "getApis": "ts-node -r tsconfig-paths/register src/utils/getApi.ts"
     },
     "keywords": [],
@@ -14,6 +16,7 @@
     "dependencies": {
         "@types/node": "^22.15.3",
         "@types/pino": "^7.0.4",
+        "axios": "^1.9.0",
         "colors": "^1.4.0",
         "iconv-lite": "^0.6.3",
         "ini": "^5.0.0",
