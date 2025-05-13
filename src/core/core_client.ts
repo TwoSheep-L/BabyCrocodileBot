@@ -2,7 +2,11 @@ import { WebSocket } from "ws";
 import CatBot from "./core.catbot";
 import { NapCatConfig } from "@/types/core_catbot";
 import { logger } from "@/utils/logger";
-import { botMessage, changeConfigParams } from "@/types/core_client";
+import {
+    botMessage,
+    changeConfigParams,
+    outputData,
+} from "@/types/core_client";
 import core_apis from "./core_apis";
 import { api } from "@/types/core_apis";
 import { v4 } from "uuid";
@@ -10,6 +14,7 @@ import colors from "colors";
 import fs from "fs";
 import path from "path";
 import { Plugin } from "@/core/core_pulgin";
+import { pluginArgs } from "@/types/core_pulgin";
 
 class CoreClient {
     public state: number = 0; //状态 0:未连接 1:连接中 2:已连接
@@ -76,8 +81,6 @@ class CoreClient {
             "notice.notify.title",
             "notice.notify.profile_like",
         ];
-        //加载插件
-        this.loadPlugin();
     }
 
     //修改配置项
@@ -90,7 +93,7 @@ class CoreClient {
     //连接服务端
     connect = async (data: NapCatConfig) => {
         this.botServer = new CatBot(data.ip, data.token, data.port);
-        this.state = 2;
+        this.state = 0;
         this.ws = this.botServer.ws;
         this.onListen();
         this.api = core_apis(this.ws);
@@ -98,9 +101,10 @@ class CoreClient {
 
     //开始监听
     onListen = () => {
-        if (this.state !== 2 || !this.ws) {
-            return logger.error("服务端未连接");
-        }
+        // if (this.state !== 2 || !this.ws) {
+        //   return logger.error("服务端未连接");
+        // }
+        if (!this.ws) return;
         // 连接建立时触发
         this.ws.on("open", this.onOpen);
 
@@ -115,12 +119,13 @@ class CoreClient {
     };
 
     //收到消息时触发函数
-    submitListenFn = (event: string, data: any) => {
+    submitListenFn = <T>(event: string, data: any) => {
+        let pluginData = <T>this.handlerData(event, data);
         if (Array.isArray(this.msgEvents?.[event])) {
             let fnList = this.msgEvents?.[event];
             fnList.forEach((fnConfig) => {
                 if (typeof fnConfig.fn === "function") {
-                    fnConfig.fn(data);
+                    fnConfig.fn(pluginData, data);
                 }
             });
         }
@@ -175,14 +180,29 @@ class CoreClient {
                 return;
             } else {
                 //开始加载插件
-                return new Plugin(path.resolve(dirPath, dir));
+                let args: pluginArgs = {
+                    api: this.api as api,
+                    on: this.on,
+                    bot: this,
+                };
+                return new Plugin(path.resolve(dirPath, dir), {
+                    args: args,
+                });
             }
         });
+        allPuglinData = allPuglinData?.filter((item) => {
+            return item && item?.pluginModule?.default;
+        });
+        logger.info(`[插件]加载插件完成,成功加载${allPuglinData.length}个插件`);
     };
 
     //连接时触发
     onOpen = async () => {
         logger.info("成功连接到服务器。");
+        this.state = 2;
+
+        //加载插件
+        this.loadPlugin();
     };
 
     //收到消息时触发
@@ -238,7 +258,10 @@ class CoreClient {
             //收到消息
             if (data?.message_type === "group") {
                 //收到群消息
-                this.submitListenFn("message_sent.group", data);
+                this.submitListenFn<outputData.groupData>(
+                    "message_sent.group",
+                    data
+                );
             }
             if (data?.message_type === "private") {
                 //收到私聊消息
@@ -393,6 +416,49 @@ class CoreClient {
     onError = (err: Error) => {
         logger.error("WebSocket error:" + err);
     };
+
+    //处理消息数据
+    private handlerData = <T>(name: string, data: any) => {
+        let handleMap = {};
+        switch (name) {
+            case "message.group":
+                //群聊消息
+                return {
+                    self_id: data?.self_id,
+                    time: data?.time,
+                    message_id: data?.message_id,
+                    user_id: data?.user_id,
+                    nickname: data?.nickname,
+                    card: data?.card,
+                    role: data?.role,
+                    raw_message: data?.raw_message,
+                    group_id: data?.group_id,
+                    message: data?.message,
+                } as T;
+
+            case "message.private":
+                //群聊消息
+                return {
+                    self_id: data?.self_id,
+                    time: data?.time,
+                    message_id: data?.message_id,
+                    user_id: data?.user_id,
+                    nickname: data?.nickname,
+                    card: data?.card,
+                    role: data?.role,
+                    raw_message: data?.raw_message,
+                    group_id: data?.group_id,
+                    message: data?.message,
+                } as T;
+
+                break;
+
+            default:
+                break;
+        }
+        return {};
+    };
 }
 export const bot = new CoreClient();
 export const apis = bot.api;
+export default CoreClient;

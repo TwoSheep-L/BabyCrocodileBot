@@ -1,4 +1,4 @@
-import { pluginConfig, pluginModule } from "@/types/core_pulgin";
+import { pluginArgs, pluginConfig, pluginModule } from "@/types/core_pulgin";
 import { logger } from "@/utils/logger";
 import fs from "fs";
 import path from "path";
@@ -17,11 +17,11 @@ export class Plugin {
     };
     public pluginModule: pluginModule = { default: () => {} };
 
-    constructor(pluginPath: string) {
-        this.loadPlugin(pluginPath);
+    constructor(pluginPath: string, { args }: { args: pluginArgs }) {
+        this.loadPlugin(pluginPath, args);
     }
 
-    async loadPlugin(pluginPath: string) {
+    async loadPlugin(pluginPath: string, args: pluginArgs) {
         this.config.path = pluginPath;
         if (!fs.existsSync(path.resolve(this.config.path))) {
             fs.mkdirSync(path.resolve(this.config.path));
@@ -88,5 +88,6 @@ export class Plugin {
         logger.info(
             `[插件]${this.config.name} 加载成功 版本:${this.config.version} 作者:${this.config.author}`
         );
+        this.pluginModule.default(args);
     }
 }

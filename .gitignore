@@ -1,6 +1,9 @@
 node_modules/
+dist/
+src/plugins/
 src/datas/
 src/config/
+
 
 # Logs
 logs
