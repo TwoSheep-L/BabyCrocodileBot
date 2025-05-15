@@ -22,6 +22,7 @@ class CoreClient {
     public api: api | undefined;
     public events: string[] = [];
     public config: changeConfigParams = { serverOriginData: true };
+    public plugins: Plugin[] = [];
 
     //消息监听执行函数
     public msgEvents: any = {};
@@ -151,12 +152,14 @@ class CoreClient {
 
     //加载插件
     loadPlugin = async () => {
+        this.plugins = []; //清空插件加载列表
+        this.msgEvents = []; //清空插件事件监听列表
         let dirPath = path.resolve(__dirname, "../plugins");
         let dirs = fs.readdirSync(dirPath);
         logger.info(`[插件]开始加载插件...`);
         let allPuglinData = dirs.map((dir) => {
             let pluginConfigPath = path.resolve(dirPath, dir, "./config.json");
-            logger.info(`[插件]正在加载插件-->${dir}`);
+            // logger.info(`[插件]正在加载插件-->${dir}`);
             //检查文件是否存在
             if (!fs.existsSync(pluginConfigPath)) {
                 logger.error(`插件${dir}缺少config.json文件`);
@@ -185,15 +188,20 @@ class CoreClient {
                     on: this.on,
                     bot: this,
                 };
-                return new Plugin(path.resolve(dirPath, dir), {
+                let thisPlugin = new Plugin(path.resolve(dirPath, dir), {
                     args: args,
                 });
+                if (thisPlugin.config?.switch) {
+                    return thisPlugin;
+                }
+                return null;
             }
         });
         allPuglinData = allPuglinData?.filter((item) => {
             return item && item?.pluginModule?.default;
         });
         logger.info(`[插件]加载插件完成,成功加载${allPuglinData.length}个插件`);
+        this.plugins = allPuglinData as Plugin[];
     };
 
     //连接时触发
@@ -229,7 +237,7 @@ class CoreClient {
             }
             //心跳事件
             if (data?.meta_event_type === "heartbeat") {
-                logger.info(`[心跳]${"♥".red}`);
+                // logger.info(`[心跳]${"♥".red}`);
                 this.submitListenFn("meta_event.heartbeat", data);
             }
         }

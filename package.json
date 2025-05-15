@@ -7,7 +7,7 @@
         "dev": "ts-node -r tsconfig-paths/register src/index.ts",
         "build": "tsc",
         "start": "node -r tsconfig-paths/register dist/index.js",
-        "getApis": "ts-node -r tsconfig-paths/register src/utils/getApi.ts"
+        "createPlugin": "ts-node -r tsconfig-paths/register src/utils/createPlugin.ts"
     },
     "keywords": [],
     "author": "",

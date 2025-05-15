@@ -109,6 +109,7 @@ const handleCommand = async (command: string) => {
             process.exit(0);
         case "reload":
             bot.loadPlugin();
+            break;
         case "serverOriginData":
             if (arg?.[0] === "true") {
                 bot.changeConfig({ serverOriginData: true });
