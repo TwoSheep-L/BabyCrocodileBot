@@ -155,6 +155,13 @@ class CoreClient {
         this.plugins = []; //清空插件加载列表
         this.msgEvents = []; //清空插件事件监听列表
         let dirPath = path.resolve(__dirname, "../plugins");
+        //检测文件是否存在
+        if (!fs.existsSync(dirPath)) {
+            //创建
+            fs.mkdirSync(dirPath);
+            logger.info(`[插件]创建插件目录成功`);
+            return;
+        }
         let dirs = fs.readdirSync(dirPath);
         logger.info(`[插件]开始加载插件...`);
         let allPuglinData = dirs.map((dir) => {
