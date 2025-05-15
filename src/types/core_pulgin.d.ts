@@ -11,6 +11,7 @@ export interface pluginConfig {
     command?: string[]; //插件指令
     event?: string[]; //插件事件
     weight?: number; //插件权重
+    switch?: boolean; //插件开关
 }
 
 export interface plugin {

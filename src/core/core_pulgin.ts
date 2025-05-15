@@ -62,6 +62,9 @@ export class Plugin {
             path: this.config.path,
         };
 
+        //如果插件未开启，则返回空
+        if (!this.config.switch) return;
+
         // 转换为file:// URL
         try {
             this.pluginModule = await import(entryFile); // 使用正确的URL导入
