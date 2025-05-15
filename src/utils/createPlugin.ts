@@ -1,3 +1,5 @@
+import { logger } from "./logger";
+
 let path = require("path");
 let fs = require("fs");
 let ReadLiner = require("readline");
@@ -92,7 +94,7 @@ rl.question("请输入插件名称：", (name: string) => {
     fs.writeFileSync(path.join(filePath, "index.ts"), defaultIndex);
     console.log(`create file ${path.join(filePath, "index.ts")}`);
 
-    console.log(`插件 ${pluginName} 插件创建完成`);
+    logger.info(`${pluginName}插件创建完成`);
 
     rl.close();
 });

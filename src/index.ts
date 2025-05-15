@@ -13,7 +13,7 @@ const rl = ReadLine.createInterface({
 });
 
 const main = async () => {
-    logger?.info("欢迎使用QQ机器人");
+    logger?.info("欢迎使用小鳄鱼QQ机器人");
     checkDatas();
     let config: Partial<config> = {};
     //检查config目录
