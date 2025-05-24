@@ -164,51 +164,42 @@ class CoreClient {
         }
         let dirs = fs.readdirSync(dirPath);
         logger.info(`[插件]开始加载插件...`);
-        let allPuglinData = dirs.map((dir) => {
-            let pluginConfigPath = path.resolve(dirPath, dir, "./config.json");
-            // logger.info(`[插件]正在加载插件-->${dir}`);
-            //检查文件是否存在
-            if (!fs.existsSync(pluginConfigPath)) {
-                logger.error(`插件${dir}缺少config.json文件`);
-                return;
-            }
-            let pluginConfigFile = fs.readFileSync(pluginConfigPath, "utf-8");
-            let pluginConfig = {};
-            try {
-                pluginConfig = JSON.parse(pluginConfigFile);
-            } catch (error) {
-                logger.error(`插件${dir}的配置文件格式错误`);
-                return;
-            }
-            //检查入口文件是否存在
-            let entryFile = path.resolve(dirPath, dir, "./index");
-            if (
-                !fs.existsSync(entryFile + ".js") &&
-                !fs.existsSync(entryFile + ".ts")
-            ) {
-                logger.error(`插件${dir}的入口文件不存在`);
-                return;
-            } else {
-                //开始加载插件
+        let allPuglinData: Promise<Plugin | null>[] = dirs.map(
+            async (dir): Promise<Plugin | null> => {
                 let args: pluginArgs = {
                     api: this.api as api,
                     on: this.on,
                     bot: this,
                 };
-                let thisPlugin = new Plugin(path.resolve(dirPath, dir), {
+                let plugin = new Plugin(path.resolve(dirPath, dir), {
                     args: args,
                 });
-                if (thisPlugin.config?.switch) {
-                    return thisPlugin;
-                }
+
+                //检测加载完成
+                let timer = setInterval(() => {
+                    if (plugin.loadState === 1) {
+                        //加载完成
+                        clearInterval(timer);
+                        Promise.resolve(plugin);
+                    } else {
+                        if (plugin.loadState === -1 || plugin.loadState === 2) {
+                            //加载失败
+                            clearInterval(timer);
+                            Promise.resolve(null);
+                        }
+                    }
+                }, 500);
                 return null;
             }
-        });
-        allPuglinData = allPuglinData?.filter((item) => {
+        );
+        let allPlugin: Array<Plugin | null | undefined> = await Promise.all(
+            allPuglinData
+        );
+        allPlugin = allPlugin?.filter((item) => {
             return item && item?.pluginModule?.default;
         });
         logger.info(`[插件]加载插件完成,成功加载${allPuglinData.length}个插件`);
-        this.plugins = allPuglinData as Plugin[];
+        this.plugins = allPlugin as Plugin[];
     };
 
     //连接时触发
@@ -443,9 +434,9 @@ class CoreClient {
                     time: data?.time,
                     message_id: data?.message_id,
                     user_id: data?.user_id,
-                    nickname: data?.nickname,
-                    card: data?.card,
-                    role: data?.role,
+                    nickname: data?.sender?.nickname,
+                    card: data?.sender?.card,
+                    role: data?.sender?.role,
                     raw_message: data?.raw_message,
                     group_id: data?.group_id,
                     message: data?.message,
@@ -458,9 +449,9 @@ class CoreClient {
                     time: data?.time,
                     message_id: data?.message_id,
                     user_id: data?.user_id,
-                    nickname: data?.nickname,
-                    card: data?.card,
-                    role: data?.role,
+                    nickname: data?.sender?.nickname,
+                    card: data?.sender?.card,
+                    role: data?.sender?.role,
                     raw_message: data?.raw_message,
                     group_id: data?.group_id,
                     message: data?.message,
