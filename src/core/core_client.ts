@@ -15,6 +15,7 @@ import fs from "fs";
 import path from "path";
 import { Plugin } from "@/core/core_pulgin";
 import { pluginArgs } from "@/types/core_pulgin";
+import HistoryMsg from "./core.historyMsg";
 
 class CoreClient {
     public state: number = 0; //状态 0:未连接 1:连接中 2:已连接
@@ -23,6 +24,8 @@ class CoreClient {
     public events: string[] = [];
     public config: changeConfigParams = { serverOriginData: true };
     public plugins: Plugin[] = [];
+    public HistoryMsg!: HistoryMsg;
+    public context: any = {};
 
     //消息监听执行函数
     public msgEvents: any = {};
@@ -82,6 +85,9 @@ class CoreClient {
             "notice.notify.title",
             "notice.notify.profile_like",
         ];
+        this.HistoryMsg = HistoryMsg.create(
+            path.resolve(__dirname, "../datas")
+        );
     }
 
     //修改配置项
@@ -219,7 +225,6 @@ class CoreClient {
             if (this.config.serverOriginData) {
                 logger.info("[接收]服务端返回数据:" + dataBaffle.toString());
             }
-            // console.log(data);
         } catch (error) {
             logger.error("[错误]数据解析错误:" + error);
             return;
@@ -245,10 +250,12 @@ class CoreClient {
             if (data?.message_type === "group") {
                 //收到群消息
                 this.submitListenFn("message.group", data);
+                this.HistoryMsg.putMessage(data);
             }
             if (data?.message_type === "private") {
                 //收到私聊消息
                 this.submitListenFn("message.private", data);
+                this.HistoryMsg.putMessage(data);
                 if (data?.sub_type === "friend") {
                     //好友消息
                     this.submitListenFn("message.private.friend", data);
