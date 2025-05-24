@@ -164,25 +164,42 @@ class CoreClient {
         }
         let dirs = fs.readdirSync(dirPath);
         logger.info(`[插件]开始加载插件...`);
-        let allPuglinData = dirs.map((dir) => {
-            let args: pluginArgs = {
-                api: this.api as api,
-                on: this.on,
-                bot: this,
-            };
-            let plugin = new Plugin(path.resolve(dirPath, dir), {
-                args: args,
-            });
-            if (plugin.config?.switch) {
-                return plugin;
+        let allPuglinData: Promise<Plugin | null>[] = dirs.map(
+            async (dir): Promise<Plugin | null> => {
+                let args: pluginArgs = {
+                    api: this.api as api,
+                    on: this.on,
+                    bot: this,
+                };
+                let plugin = new Plugin(path.resolve(dirPath, dir), {
+                    args: args,
+                });
+
+                //检测加载完成
+                let timer = setInterval(() => {
+                    if (plugin.loadState === 1) {
+                        //加载完成
+                        clearInterval(timer);
+                        Promise.resolve(plugin);
+                    } else {
+                        if (plugin.loadState === -1 || plugin.loadState === 2) {
+                            //加载失败
+                            clearInterval(timer);
+                            Promise.resolve(null);
+                        }
+                    }
+                }, 500);
+                return null;
             }
-            return null;
-        });
-        allPuglinData = allPuglinData?.filter((item) => {
+        );
+        let allPlugin: Array<Plugin | null | undefined> = await Promise.all(
+            allPuglinData
+        );
+        allPlugin = allPlugin?.filter((item) => {
             return item && item?.pluginModule?.default;
         });
         logger.info(`[插件]加载插件完成,成功加载${allPuglinData.length}个插件`);
-        this.plugins = allPuglinData as Plugin[];
+        this.plugins = allPlugin as Plugin[];
     };
 
     //连接时触发
