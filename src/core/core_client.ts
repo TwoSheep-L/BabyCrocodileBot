@@ -126,7 +126,7 @@ class CoreClient {
             let fnList = this.msgEvents?.[event];
             fnList.forEach((fnConfig) => {
                 if (typeof fnConfig.fn === "function") {
-                    fnConfig.fn(pluginData, data);
+                    fnConfig.fn(pluginData || data, data);
                 }
             });
         }
