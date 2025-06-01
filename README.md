@@ -32,3 +32,5 @@ BabyCrocodileBot 是一个 Node.js 插件终端，用于连接 NapCat 机器人�
 
 本项目采用 [MIT License](LICENSE)，**仅通过 API/服务调用方式**与 [NapCatQQ](https://github.com/NapNeko/NapCatQQ) 交互，不包含其代码或衍生作品。  
 对方项目的许可约束请参考其仓库的 [License 文件](https://github.com/NapNeko/NapCatQQ/blob/main/LICENSE)。
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TwoSheep-L/BabyCrocodileBot)
