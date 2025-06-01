@@ -5,6 +5,8 @@
 
 # babyCrocodileBot
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TwoSheep-L/BabyCrocodileBot)
+
 BabyCrocodileBot 是一个模块化的 Node.js 应用程序，设计用于通过 NapCat 机器人系统与 QQ 消息平台进行交互。该项目采用插件式架构，允许在保持核心系统稳定的同时实现功能扩展。
 
 # 项目简介
