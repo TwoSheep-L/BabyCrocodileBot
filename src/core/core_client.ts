@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import CatBot from "./core.catbot";
+import CatBot from "./core_catbot";
 import { NapCatConfig } from "@/types/core_catbot";
 import { logger } from "@/utils/logger";
 import {
@@ -15,7 +15,8 @@ import fs from "fs";
 import path from "path";
 import { Plugin } from "@/core/core_pulgin";
 import { pluginArgs } from "@/types/core_pulgin";
-import HistoryMsg from "./core.historyMsg";
+import HistoryMsg from "./core_historyMsg";
+import handlerData from "./core_handler";
 
 class CoreClient {
     public state: number = 0; //状态 0:未连接 1:连接中 2:已连接
@@ -127,7 +128,7 @@ class CoreClient {
 
     //收到消息时触发函数
     submitListenFn = <T>(event: string, data: any) => {
-        let pluginData = <T>this.handlerData(event, data);
+        let pluginData = <T>handlerData(event, data);
         if (Array.isArray(this.msgEvents?.[event])) {
             let fnList = this.msgEvents?.[event];
             fnList.forEach((fnConfig) => {
@@ -428,48 +429,6 @@ class CoreClient {
     //错误时触发
     onError = (err: Error) => {
         logger.error("WebSocket error:" + err);
-    };
-
-    //处理消息数据
-    private handlerData = <T>(name: string, data: any) => {
-        let handleMap = {};
-        switch (name) {
-            case "message.group":
-                //群聊消息
-                return {
-                    self_id: data?.self_id,
-                    time: data?.time,
-                    message_id: data?.message_id,
-                    user_id: data?.user_id,
-                    nickname: data?.sender?.nickname,
-                    card: data?.sender?.card,
-                    role: data?.sender?.role,
-                    raw_message: data?.raw_message,
-                    group_id: data?.group_id,
-                    message: data?.message,
-                } as T;
-
-            case "message.private":
-                //群聊消息
-                return {
-                    self_id: data?.self_id,
-                    time: data?.time,
-                    message_id: data?.message_id,
-                    user_id: data?.user_id,
-                    nickname: data?.sender?.nickname,
-                    card: data?.sender?.card,
-                    role: data?.sender?.role,
-                    raw_message: data?.raw_message,
-                    group_id: data?.group_id,
-                    message: data?.message,
-                } as T;
-
-                break;
-
-            default:
-                break;
-        }
-        return {};
     };
 }
 export const bot = new CoreClient();
