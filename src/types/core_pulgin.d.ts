@@ -26,6 +26,5 @@ export interface pluginModule {
 export interface pluginArgs {
     [key: string, value: any];
     api: api;
-    on: Function;
     bot: CoreClient;
 }

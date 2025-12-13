@@ -1,8 +1,11 @@
 import { pluginArgs, pluginConfig, pluginModule } from "@/types/core_pulgin";
+import isJSON from "@/utils/parseJSON";
 import { logger } from "@/utils/logger";
 import fs from "fs";
 import path from "path";
 import { pathToFileURL } from "url"; // 导入pathToFileURL
+import parseJSON from "@/utils/parseJSON";
+import BotError from "./core.error";
 
 export class Plugin {
     public config: pluginConfig = {
@@ -82,7 +85,11 @@ export class Plugin {
             `[插件]${this.config.name} 加载成功 版本:${this.config.version} 作者:${this.config.author} 描述:${this.config.description}`
         );
         //执行插件主函数 传入args  -- 未来改成context
-        this.pluginModule.default(args);
+        try {
+            this.pluginModule.default(args);
+        } catch (error) {
+            new BotError("plugin", `插件${this.config.name} 执行错误:` + error);
+        }
     }
 
     //检查插件文件完整
@@ -125,5 +132,21 @@ export class Plugin {
             logger.error(`插件${dirName}缺少入口文件`);
             return false;
         }
+    }
+
+    //获取指定目录的插件配置
+    static getPluginConfig(
+        pluginPath: string
+    ): pluginConfig | null | undefined {
+        let pluginConfigPath = path.resolve(pluginPath, "./config.json");
+        let pluginConfigFile = "";
+        try {
+            pluginConfigFile = fs.readFileSync(pluginConfigPath, "utf-8");
+        } catch (error) {
+            return null;
+        }
+        let JSONres = parseJSON(pluginConfigFile);
+        let pluginConfig = JSONres.value;
+        return pluginConfig;
     }
 }
