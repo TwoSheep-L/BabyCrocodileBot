@@ -35,5 +35,5 @@ export default <T>(name: string, data: any) => {
         default:
             break;
     }
-    return {};
+    return result || {};
 };

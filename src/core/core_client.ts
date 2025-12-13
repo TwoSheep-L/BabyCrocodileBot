@@ -14,9 +14,10 @@ import colors from "colors";
 import fs from "fs";
 import path from "path";
 import { Plugin } from "@/core/core_pulgin";
-import { pluginArgs } from "@/types/core_pulgin";
+import { pluginArgs, pluginConfig } from "@/types/core_pulgin";
 import HistoryMsg from "./core_historyMsg";
 import handlerData from "./core_handler";
+import BotError from "./core.error";
 
 class CoreClient {
     public state: number = 0; //状态 0:未连接 1:连接中 2:已连接
@@ -30,6 +31,13 @@ class CoreClient {
 
     //消息监听执行函数
     public msgEvents: any = {};
+
+    // 对外暴露的on方法
+    public on!: (
+        event: string,
+        fn: Function,
+        pluginConfig?: pluginConfig
+    ) => string | undefined;
 
     constructor(public ws?: WebSocket) {
         this.ws = ws;
@@ -89,11 +97,35 @@ class CoreClient {
         this.HistoryMsg = HistoryMsg.create(
             path.resolve(__dirname, "../datas")
         );
+
+        // 核心：实现on方法，支持显式传入插件配置
+        this.on = (
+            event: string,
+            fn: Function,
+            pluginConfig?: pluginConfig
+        ) => {
+            if (this.events.includes(event)) {
+                if (!this.msgEvents?.[event]) {
+                    this.msgEvents[event] = [];
+                }
+                let fnConfig = {
+                    event,
+                    fn,
+                    id: v4(),
+                    pluginConfig: pluginConfig || { name: "未知插件" }, // 存储插件配置
+                };
+                this.msgEvents[event].push(fnConfig);
+                return fnConfig.id;
+            } else {
+                logger.error(`[错误]事件${event}不存在`);
+                return undefined;
+            }
+        };
     }
 
     //修改配置项
     changeConfig(config: changeConfigParams) {
-        if (config.serverOriginData) {
+        if (config.serverOriginData !== undefined) {
             this.config.serverOriginData = config.serverOriginData;
         }
     }
@@ -101,7 +133,7 @@ class CoreClient {
     //连接服务端
     connect = async (data: NapCatConfig) => {
         this.botServer = new CatBot(data.ip, data.token, data.port);
-        this.state = 0;
+        this.state = 1; // 连接中状态
         this.ws = this.botServer.ws;
         this.onListen();
         this.api = core_apis(this.ws);
@@ -109,10 +141,8 @@ class CoreClient {
 
     //开始监听
     onListen = () => {
-        // if (this.state !== 2 || !this.ws) {
-        //   return logger.error("服务端未连接");
-        // }
         if (!this.ws) return;
+
         // 连接建立时触发
         this.ws.on("open", this.onOpen);
 
@@ -133,80 +163,119 @@ class CoreClient {
             let fnList = this.msgEvents?.[event];
             fnList.forEach((fnConfig) => {
                 if (typeof fnConfig.fn === "function") {
-                    fnConfig.fn(pluginData || data, data);
+                    try {
+                        fnConfig.fn(pluginData || data, data);
+                        // 日志打印插件信息
+                        logger.info(
+                            colors.green(
+                                `[事件执行] 插件：${
+                                    fnConfig.pluginConfig?.name || "未知"
+                                } | 事件：${event}`
+                            )
+                        );
+                    } catch (error) {
+                        // 错误时能定位到具体插件
+                        new BotError(
+                            "plugin",
+                            `插件【${
+                                fnConfig.pluginConfig?.name || fnConfig.id
+                            }】执行事件${event}出错：${error}`
+                        );
+                    }
                 }
             });
         }
     };
 
-    //添加事件监听函数
-    on = (event: string, fn: Function) => {
-        if (this.events.includes(event)) {
-            if (!this.msgEvents?.[event]) {
-                this.msgEvents[event] = [];
-            }
-            let fnConfig = {
-                event,
-                fn,
-                id: v4(),
-            };
-            this.msgEvents[event].push(fnConfig);
-            return fnConfig.id;
-        } else {
-            logger.error(`[错误]事件${event}不存在`);
-        }
-    };
-
     //加载插件
     loadPlugin = async () => {
-        this.plugins = []; //清空插件加载列表
-        this.msgEvents = []; //清空插件事件监听列表
+        this.plugins = [];
+        this.msgEvents = {};
         let dirPath = path.resolve(__dirname, "../plugins");
+
         //检测文件是否存在
         if (!fs.existsSync(dirPath)) {
-            //创建
-            fs.mkdirSync(dirPath);
-            logger.info(`[插件]创建插件目录成功`);
+            fs.mkdirSync(dirPath, { recursive: true });
+            logger.info(`[插件]创建插件目录成功: ${dirPath}`);
             return;
         }
+
         let dirs = fs.readdirSync(dirPath);
-        logger.info(`[插件]开始加载插件...`);
-        let allPuglinData: Promise<Plugin | null>[] = dirs.map(
-            async (dir): Promise<Plugin | null> => {
-                let args: pluginArgs = {
-                    api: this.api as api,
-                    on: this.on,
-                    bot: this,
+        logger.info(`[插件]开始加载插件... 共发现 ${dirs.length} 个插件目录`);
+
+        for (const dir of dirs) {
+            try {
+                // 跳过隐藏文件/非目录
+                const pluginFullPath = path.resolve(dirPath, dir);
+                const stat = fs.statSync(pluginFullPath);
+                if (!stat.isDirectory()) {
+                    logger.warn(`[插件] ${dir} 不是目录，跳过加载`);
+                    continue;
+                }
+
+                //获取插件配置
+                let pluginConfig = Plugin.getPluginConfig(
+                    path.resolve(process.cwd(), "./src/plugins/", dir)
+                );
+
+                if (!pluginConfig) {
+                    logger.warn(`[插件] ${dir} 配置文件不存在，跳过加载`);
+                    continue;
+                }
+
+                const pluginOn = (event: string, fn: Function) => {
+                    return this.on(event, fn, { ...pluginConfig });
                 };
-                let plugin = new Plugin(path.resolve(dirPath, dir), {
+
+                const pluginBot = {
+                    ...this, // 继承原bot的所有属性和方法
+                    on: pluginOn, // 重写on方法，绑定当前插件配置
+                };
+
+                const args: pluginArgs = {
+                    api: this.api as api,
+                    bot: pluginBot, // 传递重写on方法后的bot实例
+                };
+
+                let plugin = new Plugin(pluginFullPath, {
                     args: args,
                 });
 
-                //检测加载完成
-                let timer = setInterval(() => {
-                    if (plugin.loadState === 1) {
-                        //加载完成
-                        clearInterval(timer);
-                        Promise.resolve(plugin);
-                    } else {
-                        if (plugin.loadState === -1 || plugin.loadState === 2) {
-                            //加载失败
+                // 等待插件加载完成
+                await new Promise((resolve, reject) => {
+                    const timer = setInterval(() => {
+                        if (plugin.loadState === 1) {
                             clearInterval(timer);
-                            Promise.resolve(null);
+                            resolve(plugin);
+                        } else if (
+                            plugin.loadState === -1 ||
+                            plugin.loadState === 2
+                        ) {
+                            clearInterval(timer);
+                            reject(
+                                new Error(`加载失败，状态码${plugin.loadState}`)
+                            );
                         }
-                    }
-                }, 500);
-                return null;
+                    }, 500);
+
+                    // 超时处理（10秒）
+                    setTimeout(() => {
+                        clearInterval(timer);
+                        reject(new Error("加载超时（10秒）"));
+                    }, 10000);
+                });
+
+                // logger.info(`[插件] ${pluginConfig.name || dir} 加载成功`);
+                this.plugins.push(plugin);
+            } catch (error) {
+                logger.error(`[插件] ${dir} 加载失败:`, error);
+                continue;
             }
+        }
+
+        logger.info(
+            `[插件]加载插件完成,成功加载${this.plugins.length}个插件（总${dirs.length}个）`
         );
-        let allPlugin: Array<Plugin | null | undefined> = await Promise.all(
-            allPuglinData
-        );
-        allPlugin = allPlugin?.filter((item) => {
-            return item && item?.pluginModule?.default;
-        });
-        logger.info(`[插件]加载插件完成,成功加载${allPuglinData.length}个插件`);
-        this.plugins = allPlugin as Plugin[];
     };
 
     //连接时触发
@@ -215,7 +284,7 @@ class CoreClient {
         this.state = 2;
 
         //加载插件
-        this.loadPlugin();
+        await this.loadPlugin();
     };
 
     //收到消息时触发
@@ -241,7 +310,6 @@ class CoreClient {
             }
             //心跳事件
             if (data?.meta_event_type === "heartbeat") {
-                // logger.info(`[心跳]${"♥".red}`);
                 this.submitListenFn("meta_event.heartbeat", data);
             }
         }
@@ -321,7 +389,7 @@ class CoreClient {
             //通知事件
             if (data?.notice_type === "friend_add") {
                 //好友添加
-                this.submitListenFn("notice.friend_add	", data);
+                this.submitListenFn("notice.friend_add", data);
             }
             if (data?.notice_type === "friend_recall") {
                 //私聊撤回消息
@@ -423,14 +491,18 @@ class CoreClient {
 
     //关闭连接时触发
     onClose = () => {
+        logger.info("WebSocket连接已关闭");
+        this.state = 0;
         this.ws?.close();
     };
 
     //错误时触发
     onError = (err: Error) => {
-        logger.error("WebSocket error:" + err);
+        logger.error("WebSocket error:" + err.message);
+        this.state = 0;
     };
 }
+
 export const bot = new CoreClient();
 export const apis = bot.api;
 export default CoreClient;

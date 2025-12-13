@@ -50,8 +50,7 @@ export type Message =
     | message_node
     | message_json
     | message_mface
-    | message_file
-    | String;
+    | message_file;
 
 export interface message_text {
     type: "text";
