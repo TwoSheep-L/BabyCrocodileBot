@@ -258,11 +258,11 @@ class CoreClient {
                         }
                     }, 500);
 
-                    // 超时处理（10秒）
+                    // 超时处理（5秒）
                     setTimeout(() => {
                         clearInterval(timer);
-                        reject(new Error("加载超时（10秒）"));
-                    }, 10000);
+                        reject(new Error("加载超时（5秒）"));
+                    }, 5000);
                 });
 
                 // logger.info(`[插件] ${pluginConfig.name || dir} 加载成功`);
@@ -505,4 +505,5 @@ class CoreClient {
 
 export const bot = new CoreClient();
 export const apis = bot.api;
+export const getApis = () => bot.api;
 export default CoreClient;
