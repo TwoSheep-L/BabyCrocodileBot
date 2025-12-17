@@ -1,5 +1,5 @@
-export interface JSONData {
-    value?: { [key: string]: any } | null;
+export interface JSONData<T> {
+    value?: T | { [key: string]: any } | null;
     error?: unknown;
     format?: string;
     success?: boolean;
@@ -75,8 +75,8 @@ export function decodeHtmlEntities(str: string): string {
 /**
  * JSON解析函数
  */
-export default (data: string): JSONData => {
-    let res: Partial<JSONData> = {};
+export default <T>(data: string): JSONData<T | any> => {
+    let res: Partial<JSONData<T>> = {};
     try {
         let json = JSON.parse(decodeHtmlEntities(data));
         res.value = json;
