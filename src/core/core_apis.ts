@@ -106,9 +106,9 @@ export default (outWs: WebSocket): api => {
          */
         set_friend_add_request(flag, approve, remark) {
             return require<null>("set_friend_add_request", {
-                flag: 1,
-                approve: 1,
-                remark: "",
+                flag,
+                approve,
+                remark,
             });
         },
 
