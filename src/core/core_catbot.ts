@@ -1,6 +1,7 @@
 import WebSocket from "ws";
 import { NapCatConfig, reconnect, heartbeat } from "@/types/core_catbot";
 import { logger } from "@/utils/logger";
+import CoreClient from "./core_client";
 
 export default class CatBot implements NapCatConfig {
     public ws!: WebSocket;
@@ -9,15 +10,47 @@ export default class CatBot implements NapCatConfig {
     private retryCount: number = 0; //当前重试次数
     private interval?: number; //心跳检测间隔
     private heartTimer?: NodeJS.Timeout; //当前心跳检测的timer
+    public token: string = ""; // token
+    public reconnect?: reconnect; // 重连配置
+    public ip: string = ""; // ip
+    public port: number = 8080; // 端口
+    public client?: CoreClient;
 
     constructor(
-        public ip: string,
-        public token: string,
-        public port: number,
-        public reconnect?: reconnect,
-        public heartbeat?: heartbeat
+        {
+            ip,
+            port,
+            token,
+            reconnect,
+            heartbeat,
+            client,
+        }: {
+            ip: string;
+            port: number;
+            token: string;
+            reconnect?: reconnect;
+            heartbeat?: heartbeat;
+            client?: CoreClient;
+        } = {
+            ip: "",
+            port: 0,
+            token: "",
+            reconnect: {
+                enabled: true,
+                maxRetries: 3,
+                retryInterval: 1000,
+            },
+        }
     ) {
         this.token = token;
+        this.ip = ip;
+        this.port = port;
+        if (!token || !ip || !port) {
+            throw new Error("请检查ip、端口、token是否填写正确");
+        }
+        if (client) {
+            this.client = client;
+        }
         this.reconnect = reconnect || {
             enabled: true,
             maxRetries: 3,
@@ -142,7 +175,12 @@ export default class CatBot implements NapCatConfig {
                 );
                 let success = this.content(this.ip, this.port, this.token);
                 if (success) {
+                    //重新连接成功
                     clearInterval(timer);
+                    //重新绑定
+                    if (this.client) {
+                        this.client.bind();
+                    }
                 }
             }, this.reconnect?.retryInterval || 1000);
         }

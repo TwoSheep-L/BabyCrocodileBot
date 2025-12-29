@@ -107,6 +107,9 @@ const handleCommand = async (command: string) => {
         case "exit":
             logger.info("退出");
             process.exit(0);
+        case "offLine":
+            bot.ws?.close();
+            break;
         case "reload":
             bot.loadPlugin();
             break;
