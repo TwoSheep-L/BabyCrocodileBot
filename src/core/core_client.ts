@@ -132,11 +132,23 @@ class CoreClient {
 
     //连接服务端
     connect = async (data: NapCatConfig) => {
-        this.botServer = new CatBot(data.ip, data.token, data.port);
-        this.state = 1; // 连接中状态
-        this.ws = this.botServer.ws;
-        this.onListen();
-        this.api = core_apis(this.ws);
+        this.botServer = new CatBot({
+            ip: data.ip,
+            port: data.port,
+            token: data.token,
+            client: this,
+        });
+        this.bind();
+    };
+
+    //绑定
+    bind = async () => {
+        if (this.botServer) {
+            this.state = 1; // 绑定中状态
+            this.ws = this.botServer.ws;
+            this.onListen();
+            this.api = core_apis(this.ws);
+        }
     };
 
     //开始监听
@@ -220,6 +232,11 @@ class CoreClient {
 
                 if (!pluginConfig) {
                     logger.warn(`[插件] ${dir} 配置文件不存在，跳过加载`);
+                    continue;
+                }
+
+                if (!pluginConfig?.switch) {
+                    logger.warn(`[插件] ${dir} 插件未开启，跳过加载`);
                     continue;
                 }
 
